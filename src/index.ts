@@ -23,6 +23,8 @@ export function captureError(error: unknown, config: FixilogConfig) {
     userAgent: typeof window !== "undefined" ? navigator.userAgent : "server",
   };
 
+  console.log("FIXILOG PAYLOAD:", payload);
+
   // Envoi de l’erreur à l’API Fixilog
   fetch("https://api.fixilog.dev/api/report", {
     method: "POST",
