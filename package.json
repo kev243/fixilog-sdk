@@ -1,0 +1,30 @@
+{
+  "name": "fixilog-sdk",
+  "version": "0.0.1",
+  "description": "Lightweight error tracking SDK for Fixilog (error logging + AI suggestions).",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "error",
+    "logging",
+    "monitoring",
+    "fixilog",
+    "sdk"
+  ],
+  "author": "Kevin Nimi Ngwe",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
