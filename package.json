@@ -1,10 +1,11 @@
 {
   "name": "fixilog-sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Lightweight error tracking SDK for Fixilog (error logging + AI suggestions).",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "files": [
     "dist"
   ],

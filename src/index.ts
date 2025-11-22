@@ -1,27 +1,56 @@
 export interface FixilogConfig {
-  appId: string; // identifiant du projet/app côté Fixilog
-  environment?: string; // "production", "staging", etc.
+  appId?: string; // identifiant du projet/app côté Fixilog
+  fixilogSecret?: string; // clé secrète sécurisée (server uniquement)
   metadata?: Record<string, any>;
 }
 
 // Fonction principale pour capturer et envoyer une erreur à Fixilog
-export function captureError(error: unknown, config: FixilogConfig) {
-  if (!config?.appId) return;
-  if (!error) return;
+export function captureError(error: unknown, config: FixilogConfig = {}) {
+  if (!config) {
+    console.warn("Fixilog: No configuration provided.");
+    return;
+  }
 
-  // extration du message et de la stack
+  // Détection automatique du contexte server/client
+  const isServer = typeof window === "undefined";
+
+  // Vérification minimale de appId
+  if (!config.appId) {
+    console.warn("Fixilog: Missing appId. Error not sent.");
+    return;
+  }
+
+  // Vérification secrète côté serveur
+  if (isServer && !config.fixilogSecret) {
+    console.warn(
+      "Fixilog: Missing fixilogSecret for server-side error. Error not sent."
+    );
+    return;
+  }
+
+  if (!error) {
+    console.warn("Fixilog: No error provided.");
+    return;
+  }
+
+  // Normalisation de l’erreur
   const err = normalizeError(error);
 
   // Construction du payload à envoyer à l’API Fixilog
-  const payload = {
+  const payload: any = {
     appId: config.appId,
-    environment: config.environment ?? "production",
     message: err.message,
     stacktrace: err.stack,
     metadata: config.metadata ?? {},
     timestamp: Date.now(),
-    userAgent: typeof window !== "undefined" ? navigator.userAgent : "server",
+    environment: isServer ? "server" : "client",
+    userAgent: isServer ? "server" : navigator.userAgent,
   };
+
+  // Ajout de la clé secrète uniquement côté serveur
+  if (isServer && config.fixilogSecret) {
+    payload.fixilogSecret = config.fixilogSecret;
+  }
 
   console.log("FIXILOG PAYLOAD:", payload);
 

@@ -34,3 +34,7 @@ coverage/
 
 # Temporary
 *.tmp
+
+# Package tarballs
+fixilog-sdk-0.0.1.tgz
+
