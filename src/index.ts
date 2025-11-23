@@ -59,9 +59,22 @@ export function captureError(error: unknown, config: FixilogConfig = {}) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  }).catch(() => {
-    // On ignore les erreurs d’envoi pour ne pas casser l’app du client
-  });
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.warn(
+          `Fixilog: Failed to send error (HTTP ${response.status})`,
+          errorData
+        );
+      } else {
+        console.log("Fixilog: Error successfully sent");
+      }
+    })
+    .catch((err) => {
+      // On log l'erreur d'envoi mais on ne casse pas l'app
+      console.warn("Fixilog: Network error while sending report:", err.message);
+    });
 }
 
 // Normalisation de l’erreur pour extraire message et stack
