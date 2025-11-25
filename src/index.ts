@@ -1,6 +1,7 @@
 export interface FixilogConfig {
   appId?: string; // identifiant du projet/app côté Fixilog
   fixilogSecret?: string; // clé secrète sécurisée (server uniquement)
+  environment?: string; // environnement (ex: production, staging, etc.)
   metadata?: Record<string, any>;
 }
 
@@ -43,7 +44,7 @@ export function captureError(error: unknown, config: FixilogConfig = {}) {
     stacktrace: err.stack,
     metadata: config.metadata ?? {},
     timestamp: Date.now(),
-    environment: isServer ? "server" : "client",
+    environment: config.environment ?? "production",
     userAgent: isServer ? "server" : navigator.userAgent,
   };
 
